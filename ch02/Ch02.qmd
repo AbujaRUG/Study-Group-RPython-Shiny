@@ -24,7 +24,7 @@ Shiny encourages separation of the code that generates your user interface (the 
 
 ## Inputs
 
-**Common structure** - input functions: e.g. 
+**Common structure** - input functions: e.g.
 
 ```{r eval=FALSE}
 sliderInput(inputId = "min", label = "Limit (minimum)", value = 50, min = 0, max = 100)
@@ -38,7 +38,7 @@ sliderInput(inputId = "min", label = "Limit (minimum)", value = 50, min = 0, max
 
 **Note**: When creating an input, I recommend supplying the inputId and label arguments by position, and all other arguments by name:
 
-``` {r eval=FALSE}
+```{r eval=FALSE}
 sliderInput("min", "Limit (minimum)", value = 50, min = 0, max = 100)
 
 ```
@@ -49,7 +49,7 @@ sliderInput("min", "Limit (minimum)", value = 50, min = 0, max = 100)
 -   passwords with passwordInput(), and
 -   paragraphs of text with textAreaInput().
 
-``` {r eval=FALSE}       
+```{r eval=FALSE}
 ui <- fluidPage(
 textInput("name", "What's your name?"),
 
@@ -68,7 +68,7 @@ textAreaInput("story",
 -   constrained text box with numericInput()
 -   slider with sliderInput(), a length-2 numeric vector for the default value of sliderInput() gives a “range” slider with two ends
 
-``` {r eval=FALSE}      
+```{r eval=FALSE}
 ui <- fluidPage(
 
 numericInput("num", "Number one", value = 0, min = 0, max = 100),
@@ -92,7 +92,7 @@ Sliders are extremely customisable and there are many ways to tweak their appear
 
 -   provide a convenient calendar picker, and additional arguments like `datesdisabled` and `daysofweekdisabled` allow you to restrict the set of valid inputs.
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
 
 dateInput("dob", "When were you born?"),
@@ -132,7 +132,7 @@ radioButtons("animal", "What's your favourite animal?", animals)
 
     -   `choiceValues` (determines what is returned in your server function)
 
-``` {r eval=FALSE}        
+```{r eval=FALSE}
 ui <- fluidPage(   
 radioButtons("rb", "Choose one:",     
     choiceNames = list(       
@@ -153,7 +153,7 @@ SelectInputs
 
 -   set `multiple = TRUE` to allow the user to select multiple elements
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage( 
 selectInput( "state", "What's your favourite state?", state.name, multiple = TRUE ) 
 )
@@ -169,7 +169,7 @@ For a very large set of possible options, use “server-side” `selectInput()`
 
 checkbox() - a single checkbox for a single yes/no question
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
   checkboxInput("cleanup", "Clean up?", value = TRUE),
   checkboxInput("shutdown", "Shutdown?")
@@ -180,7 +180,7 @@ ui <- fluidPage(
 
 checkboxGroupInput() - select multiple values
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
   checkboxGroupInput("animal", "What animals do you like?", animals)
 )
@@ -190,7 +190,7 @@ ui <- fluidPage(
 
 **File uploads** - allow users to upload a file, requires special handling on the server side.
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
   fileInput("upload", NULL)
 )
@@ -200,7 +200,7 @@ ui <- fluidPage(
 
 **Action buttons** - `actionButton()`,`actionLink()` - let the user perform an action - naturally paired with observeEvent() or eventReactive() in server function
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
   actionButton("click", "Click me!"),
   actionButton("drink", "Drink me!", icon = icon("cocktail"))
@@ -217,7 +217,7 @@ So, using the class argument, we can:
 -   change the button size with "btn-lg", "btn-sm", "btn-xs".
 -   make buttons span the entire width of the element they are embedded within using "btn-block"
 
-``` {r eval=FALSE}         
+```{r eval=FALSE}
 ui <- fluidPage(
   fluidRow(
     actionButton("click", "Click me!", class = "btn-danger"),
