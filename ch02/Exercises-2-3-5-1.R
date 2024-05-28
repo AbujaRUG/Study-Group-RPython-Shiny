@@ -8,7 +8,7 @@ ui <- fluidPage(
   # renderPrint(t.test(1:5, 2:6))
   verbatimTextOutput(outputId = "vbTtest"),
   # renderText(str(lm(mpg ~ wt, data = mtcars)))
-  textOutput(outputId = "txtMtCars")
+  verbatimTextOutput(outputId = "txtMtCars")
 )
 
 server <- function(input, output, session) {
@@ -18,7 +18,7 @@ server <- function(input, output, session) {
   
   output$vbTtest <- renderPrint(t.test(1:5, 2:6))
   
-  output$txtMtCars <- renderText(str(lm(mpg ~ wt, data = mtcars)))
+  output$txtMtCars <- renderPrint(str(lm(mpg ~ wt, data = mtcars)))
 }
 
 shinyApp(ui, server)

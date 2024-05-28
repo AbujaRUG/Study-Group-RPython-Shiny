@@ -6,7 +6,7 @@ ui <- fluidPage(
   # inside the text entry area. 
   # How do you call textInput() to generate the UI below?
   textInput(inputId = "txtWithPlaceholder",
-            label= "",
+            label= "Can I meet you?",
             placeholder = "Your name"),
   # 2. Carefully read the documentation for sliderInput() 
   # to figure out how to create a date slider, as shown 

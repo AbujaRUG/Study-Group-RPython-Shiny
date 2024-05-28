@@ -248,7 +248,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # single line code i.e {} not required within render function
   output$text <- renderText("Hello friend!")
-  output$print <- renderPrint("Hello friend!")
+  output$code <- renderPrint("Hello friend!")
   # {} within render function for multiple lines of code or optional for single code
   # output$text <- renderText({
   #   "Hello friend!"
