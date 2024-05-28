@@ -1,7 +1,0 @@
----
-title: "Mastering Shiny: Ch2 - Basic UI"
-format: html
-editor: visual
----
-
-## Basic UI

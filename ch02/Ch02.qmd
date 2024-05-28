@@ -1,0 +1,316 @@
+---
+title: "Mastering Shiny: Ch2 - Basic UI"
+format: html
+editor: visual
+---
+
+## Basic UI
+
+### **Previously**
+
+Shiny encourages separation of the code that generates your user interface (the front end) from the code that drives your app’s behaviour (the back end).
+
+### Chapter goal
+
+-   focus on front end
+
+-   inputs and outputs built into Shiny
+
+-   many types of data and display many types of R output.
+
+-   shiny extension packages -  [shinyWidgets](https://github.com/dreamRs/shinyWidgets), [colorpicker](https://github.com/daattali/colourpicker), and [sorttable](https://rstudio.github.io/sortable/)
+
+-   Comprehensive list of extensions at <https://github.com/nanxstats/awesome-shiny-extensions>, maintained by [Nan Xiao](https://nanx.me/).
+
+## Inputs
+
+**Common structure** - input functions: e.g. 
+
+```{r eval=FALSE}
+sliderInput(inputId = "min", label = "Limit (minimum)", value = 50, min = 0, max = 100)
+```
+
+-   inputId = **unique identifier** used to connect the front end with the back end
+
+-   label = second parameter, used to create a **human-readable** label for the control.
+
+-   value = third parameter, set the default value for input control
+
+**Note**: When creating an input, I recommend supplying the inputId and label arguments by position, and all other arguments by name:
+
+``` {r eval=FALSE}
+sliderInput("min", "Limit (minimum)", value = 50, min = 0, max = 100)
+
+```
+
+**Free text**
+
+-   small amounts of text using textInput(),
+-   passwords with passwordInput(), and
+-   paragraphs of text with textAreaInput().
+
+``` {r eval=FALSE}       
+ui <- fluidPage(
+textInput("name", "What's your name?"),
+
+passwordInput("password", "What's your password?"),
+
+textAreaInput("story",
+  "Tell me about yourself", 
+  rows = 3) 
+)
+```
+
+![](images/clipboard-3485515942.png)
+
+**Numeric inputs** - numeric values
+
+-   constrained text box with numericInput()
+-   slider with sliderInput(), a length-2 numeric vector for the default value of sliderInput() gives a “range” slider with two ends
+
+``` {r eval=FALSE}      
+ui <- fluidPage(
+
+numericInput("num", "Number one", value = 0, min = 0, max = 100),
+
+sliderInput("num2", "Number two", value = 50, min = 0, max = 100),
+
+sliderInput("rng", "Range", value = c(10, 20), min = 0, max = 100)
+
+)
+```
+
+![](images/clipboard-2659400104.png)
+
+**Recommendation**
+
+Only use sliders for small ranges, or cases where the precise value is not so important. Attempting to precisely select a number on a small slider is an exercise in frustration!
+
+Sliders are extremely customisable and there are many ways to tweak their appearance. See [`?sliderInput`](https://rdrr.io/pkg/shiny/man/sliderInput.html) and <https://shiny.rstudio.com/articles/sliders.html> for more details.
+
+**Dates** - single day with dateInput() or a range of two days with dateRangeInput().
+
+-   provide a convenient calendar picker, and additional arguments like `datesdisabled` and `daysofweekdisabled` allow you to restrict the set of valid inputs.
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+
+dateInput("dob", "When were you born?"),
+
+dateRangeInput("holiday", "When do you want to go on vacation next?")
+
+)
+```
+
+![](images/clipboard-4250134604.png)
+
+**Note**: Date format, language, and the day on which the week starts defaults to US standards. If you are creating an app with an international audience, set `format`, `language`, and `weekstart` so that the dates are natural to your users.
+
+**Limited choices**
+
+two different approaches - `selectInput()` and `radioButtons()`.
+
+animals \<- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+
+ui \<- fluidPage(
+
+selectInput("state", "What's your favourite state?", state.name),
+
+radioButtons("animal", "What's your favourite animal?", animals)
+
+)
+
+![](images/clipboard-1958262044.png)
+
+*Radio buttons*
+
+-   show all possible options, making them suitable for short lists
+
+-   display options other than plain text via the arguments:
+
+    -   `choiceNames`(determines what is shown to the user)
+
+    -   `choiceValues` (determines what is returned in your server function)
+
+``` {r eval=FALSE}        
+ui <- fluidPage(   
+radioButtons("rb", "Choose one:",     
+    choiceNames = list(       
+      icon("angry"),       
+      icon("smile"),       
+      icon("sad-tear")     
+      ),     
+    choiceValues = list("angry", "happy", "sad")   
+    ) 
+  )
+```
+
+![](images/clipboard-3710861501.png)
+
+SelectInputs
+
+-   create dropdowns occupying more space thereby suitable for longer options
+
+-   set `multiple = TRUE` to allow the user to select multiple elements
+
+``` {r eval=FALSE}         
+ui <- fluidPage( 
+selectInput( "state", "What's your favourite state?", state.name, multiple = TRUE ) 
+)
+```
+
+![](images/clipboard-1098014113.png)
+
+Note:
+
+For a very large set of possible options, use “server-side” `selectInput()` i.e. `selectizeInput()` so that the complete set of possible options are not embedded in the UI (which can make it slow to load), but instead sent as needed by the server.
+
+**Checkbox/CheckboxGroupInput**
+
+checkbox() - a single checkbox for a single yes/no question
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+  checkboxInput("cleanup", "Clean up?", value = TRUE),
+  checkboxInput("shutdown", "Shutdown?")
+)
+```
+
+![](images/clipboard-4097917291.png)
+
+checkboxGroupInput() - select multiple values
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+  checkboxGroupInput("animal", "What animals do you like?", animals)
+)
+```
+
+![](images/clipboard-2426417543.png)
+
+**File uploads** - allow users to upload a file, requires special handling on the server side.
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+  fileInput("upload", NULL)
+)
+```
+
+![](images/clipboard-203383946.png)
+
+**Action buttons** - `actionButton()`,`actionLink()` - let the user perform an action - naturally paired with observeEvent() or eventReactive() in server function
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+  actionButton("click", "Click me!"),
+  actionButton("drink", "Drink me!", icon = icon("cocktail"))
+)
+```
+
+![](images/clipboard-375783295.png)
+
+class arguments: sets the class attribute of the underlying HTML, which affects how the element is styled.
+
+So, using the class argument, we can:
+
+-   customise the appearance of the buttons i.e. "btn-primary", "btn-success", "btn-info", "btn-warning", or "btn-danger".
+-   change the button size with "btn-lg", "btn-sm", "btn-xs".
+-   make buttons span the entire width of the element they are embedded within using "btn-block"
+
+``` {r eval=FALSE}         
+ui <- fluidPage(
+  fluidRow(
+    actionButton("click", "Click me!", class = "btn-danger"),
+    actionButton("drink", "Drink me!", class = "btn-lg btn-success")
+  ),
+  fluidRow(
+    actionButton("eat", "Eat me!", class = "btn-block")
+  )
+)
+```
+
+![](images/clipboard-895627785.png)
+
+## **Outputs**
+
+-   takes a unique ID as their first argument i.e. 'outputID'
+-   access in the server function as follows: output\$outputID
+-   each output function on the front end is coupled with a render function in the back end (server side)
+-   3 main types: text, tables, and plots
+
+**Text** textOutput(): display regular text verbatimTextOutput(): fixed code and console output
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+server <- function(input, output, session) {
+  # single line code i.e {} not required within render function
+  output$text <- renderText("Hello friend!")
+  output$print <- renderPrint("Hello friend!")
+  # {} within render function for multiple lines of code or optional for single code
+  # output$text <- renderText({
+  #   "Hello friend!"
+  # })
+  # output$code <- renderPrint({
+  #   "Hello friend!"
+  # })
+  
+}
+```
+
+![](images/clipboard-1237540109.png)
+
+Note that there are two render functions which behave slightly differently:
+
+-   [`renderText()`](https://rdrr.io/pkg/shiny/man/renderPrint.html) combines the result into a single string, and is usually paired with [`textOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html)
+
+-   [`renderPrint()`](https://rdrr.io/pkg/shiny/man/renderPrint.html) *prints* the result, as if you were in an R console, and is usually paired with [`verbatimTextOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html).
+
+    ![](images/clipboard-3813712832.png)
+
+    ### **Tables**
+
+    2 options for displaying data frames in tables:
+
+    -   `tableOutput()` and `renderTable()`: render a static table of data, showing all the data at once; most useful for small, fixed summaries
+
+    -   `dataTableOutput()` and `renderDataTable()` render a dynamic table, showing a fixed number of rows along with controls to change which rows are visible.
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  tableOutput("static"),
+  dataTableOutput("dynamic")
+)
+server <- function(input, output, session) {
+  output$static <- renderTable(head(mtcars))
+  output$dynamic <- renderDataTable(mtcars, options = list(pageLength = 5))
+}
+
+```
+
+### **Plots**
+
+-   display any type of R graphic (base, ggplot2, or otherwise) with `plotOutput()` and `renderPlot()`
+
+-   override the default values for height and width of plots with the `height` and `width` arguments; set res=96
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  plotOutput("plot", width = "400px")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot(plot(1:5), res = 96)
+}
+```
+
+Plots are special because they are outputs that can also act as inputs. [`plotOutput()`](https://rdrr.io/pkg/shiny/man/plotOutput.html) has a number of arguments like `click`, `dblclick`, and `hover`. If you pass these a string, like `click = "plot_click"`, they’ll create a reactive input (`input$plot_click`) that you can use to handle user interaction on the plot, e.g. clicking on the plot. We’ll come back to interactive plots in Shiny in Chapter [7](https://mastering-shiny.org/action-graphics.html#action-graphics).
+
+### **Downloads**
+
+You can let the user download a file with [`downloadButton()`](https://rdrr.io/pkg/shiny/man/downloadButton.html) or [`downloadLink()`](https://rdrr.io/pkg/shiny/man/downloadButton.html). These require new techniques in the server function, so we’ll come back to that in Chapter [9](https://mastering-shiny.org/action-transfer.html#action-transfer).
+
+## Solutions
+
+[Mastering Shiny Solutions by Howard Baek](https://mastering-shiny-solutions.netlify.app/)
